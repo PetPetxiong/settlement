@@ -356,7 +356,21 @@
     set('p_interest', interest);
   }
 
-  function downloadPDF() {
+  function svgToPng(svgDataUrl, width, height) {
+    return new Promise(function(resolve) {
+      var img = new Image();
+      img.onload = function() {
+        var canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.src = svgDataUrl;
+    });
+  }
+
+  async function downloadPDF() {
     const name    = get('f_name').toUpperCase() || 'CUSTOMER';
     const ic      = get('f_ic') || '—';
     const addr    = get('f_address').toUpperCase() || '—';
